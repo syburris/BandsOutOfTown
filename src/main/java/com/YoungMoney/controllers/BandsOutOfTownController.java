@@ -85,11 +85,54 @@ public class BandsOutOfTownController {
         return "redirect:/";
     }
 
+    @RequestMapping(path = "/edit-concert", method = RequestMethod.GET)
+    public String editPage(Model model, HttpSession session, int id) throws Exception {
+        String name = (String) session.getAttribute("username");
+        User user = users.findFirstByName(name);
+        Concert concert = concerts.findOne(id);
+        if (user == null) {
+            throw new Exception("You can't do that!");
+        }
+        model.addAttribute("user", user);
+        model.addAttribute("concert", concert);
+        model.addAttribute("now", LocalDate.now());
+        return "edit";
+    }
+
+    @RequestMapping(path = "/edit-concert", method = RequestMethod.POST)
+    public String editConcert(String name, String venue, String city, String state, String date, int id, HttpSession session) throws Exception {
+        if (!validateUser(session,id)) {
+            throw new Exception("Not logged in!");
+        }
+        Concert concert = concerts.findOne(id);
+        concert.setDate(LocalDate.parse(date));
+        concert.setName(name);
+        concert.setVenue(venue);
+        concert.setCity(city);
+        concert.setState(state);
+        concerts.save(concert);
+        return "redirect:/";
+    }
+
+    @RequestMapping(path = "/delete-concert", method = RequestMethod.POST)
+    public String deleteConcert(HttpSession session, int id) throws Exception {
+        if (!validateUser(session, id)) {
+            throw new Exception("Not logged in!");
+        }
+        concerts.delete(id);
+        return "redirect:/";
+    }
+
     @RequestMapping(path = "/logout", method = RequestMethod.POST)
     public String logout(HttpSession session) {
         session.invalidate();
         return "redirect:/";
     }
 
-
+    public boolean validateUser(HttpSession session, int id) {
+        String name = (String) session.getAttribute("username");
+        User user = users.findFirstByName(name);
+        Concert concert = concerts.findOne(id);
+        return user != null && concert !=null && user.name.equals(concert.user.name);
+    }
 }

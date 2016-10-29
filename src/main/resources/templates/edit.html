@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Concert</title>
+</head>
+<body>
+
+    {{#concert}}
+    <form action="/edit-concert" method="post">
+        <input type="hidden" value="{{id}}" name="id"/>
+        <input type="text" value="{{name}}" placeholder="Band Name" name="name"/>
+        <input type="text" value="{{venue}}" placeholder="Venue" name="venue"/>
+        <input type="text" value="{{city}}" placeholder="City" name="city"/>
+        <input type="text" value="{{state}}" placeholder="State" name="state"/>
+        <input type="date" name="date" value="{{now}}"/>
+        <button type="submit">Submit Edit</button>
+    </form>
+    {{/concert}}
+</body>
+</html>
