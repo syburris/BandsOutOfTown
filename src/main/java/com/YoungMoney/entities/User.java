@@ -11,13 +11,13 @@ public class User {
 
     @Id
     @GeneratedValue
-    int id;
+    public int id;
 
     @Column(nullable = false)
-    String name;
+    public String name;
 
     @Column(nullable = false)
-    String password;
+    public String password;
 
     public User() {
     }

@@ -15,18 +15,33 @@ public class Concert {
     int id;
 
     @Column(nullable = false)
-    String name;
+    public String name;
 
     @Column(nullable = false)
-    LocalDate date;
+    public LocalDate date;
 
     @Column(nullable = false)
-    String venue;
+    public String venue;
+
+    @Column(nullable = false)
+    public String city;
+
+    @Column(nullable = false)
+    public String state;
 
     @ManyToOne
     User user;
 
     public Concert() {
+    }
+
+    public Concert(String name, LocalDate date, String venue, String city, String state, User user) {
+        this.name = name;
+        this.date = date;
+        this.venue = venue;
+        this.city = city;
+        this.state = state;
+        this.user = user;
     }
 
     public Concert(String name, LocalDate date, String venue, User user) {
