@@ -51,16 +51,20 @@
             <td>{{state}}</td>
             <td>{{date}}</td>
             <td>
+                {{#isMe}}
                 <form action="/edit-concert" method="get">
                     <input type="hidden" value="{{id}}" name="id"/>
                     <button type="submit">Edit</button>
                 </form>
+                {{/isMe}}
             </td>
             <td>
+                {{#isMe}}
                 <form action="/delete-concert" method="post">
                     <input type="hidden" value="{{id}}" name="id"/>
                     <button type="submit">Delete</button>
                 </form>
+                {{/isMe}}
             </td>
         </tr>
         {{/concerts}}

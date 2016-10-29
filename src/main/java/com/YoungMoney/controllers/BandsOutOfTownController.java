@@ -48,6 +48,9 @@ public class BandsOutOfTownController {
         else {
             concertList = concerts.findAll();
         }
+        for (Concert concert : concertList) {
+            concert.isMe = concert.user.name.equals(name);
+        }
 
         model.addAttribute("now", LocalDate.now());
         model.addAttribute("user", user);

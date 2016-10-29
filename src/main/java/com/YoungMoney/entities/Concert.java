@@ -1,5 +1,7 @@
 package com.YoungMoney.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.time.LocalDate;
 
@@ -30,7 +32,11 @@ public class Concert {
     public String state;
 
     @ManyToOne
-    User user;
+    public User user;
+
+    @JsonIgnore
+    @Transient
+    public boolean isMe;
 
     public Concert() {
     }
