@@ -70,5 +70,11 @@ public class BandsOutOfTownController {
 
     }
 
+    @RequestMapping(path = "/logout", method = RequestMethod.POST)
+    public String logout(HttpSession session) {
+        session.invalidate();
+        return "redirect:/";
+    }
+
 
 }

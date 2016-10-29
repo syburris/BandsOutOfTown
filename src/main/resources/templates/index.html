@@ -19,7 +19,53 @@
         <button type="submit">Logout</button>
     </form>
 
-    <input type="date" name="date" value="{{now}}"/>
+    <br>
+
+    <form action="/create-concert" method="post">
+        <input type="text" placeholder="Band Name" name="name"/>
+        <input type="text" placeholder="Venue" name="venue"/>
+        <input type="text" placeholder="City" name="city"/>
+        <input type="text" placeholder="State" name="state"/>
+        <input type="date" name="date" value="{{now}}"/>
+        <button type="submit">Submit</button>
+    </form>
+
+    <br>
+    <br>
+
+    <table>
+        <tr>
+            <th>Band Name</th>
+            <th>Venue</th>
+            <th>City</th>
+            <th>State</th>
+            <th>Date</th>
+            <th>></th>
+            <th></th>
+        </tr>
+        {{#concerts}}
+        <tr>
+            <td>{{name}}</td>
+            <td>{{venue}}</td>
+            <td>{{city}}</td>
+            <td>{{state}}</td>
+            <td>{{date}}</td>
+            <td>
+                <form action="/edit-concert" method="get">
+                    <input type="hidden" value="{{id}}" name="id"/>
+                    <button type="submit">Edit</button>
+                </form>
+            </td>
+            <td>
+                <form action="/delete-concert" method="post">
+                    <input type="hidden" value="{{id}}" name="id"/>
+                    <button type="submit">Delete</button>
+                </form>
+            </td>
+        </tr>
+        {{/concerts}}
+    </table>
+
 
 {{/user}}
 
