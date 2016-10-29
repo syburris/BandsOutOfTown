@@ -70,6 +70,18 @@ public class BandsOutOfTownController {
 
     }
 
+    @RequestMapping(path = "/create-concert", method = RequestMethod.POST)
+    public String create(String name, String venue, String city, String state, String date, HttpSession session) throws Exception {
+        String username = (String) session.getAttribute("username");
+        User user = users.findFirstByName(username);
+        if (user == null) {
+            throw new Exception("Not logged in!");
+        }
+        Concert concert = new Concert(name, LocalDate.parse(date), venue, city, state, user);
+        concerts.save(concert);
+        return "redirect:/";
+    }
+
     @RequestMapping(path = "/logout", method = RequestMethod.POST)
     public String logout(HttpSession session) {
         session.invalidate();
