@@ -77,14 +77,14 @@
                 {{/isMe}}
             </td>
             <td>
-                {{#going}}
-                <form action="/going">
+
+                <form action="/going" method="post">
                     <input type="hidden" value="{{id}}" name="id"/>
                     <button type="submit">
                         {{^isGoing}}Not Going{{/isGoing}}{{#isGoing}}Going{{/isGoing}}
                     </button>
                 </form>
-                {{/going}}
+
             </td>
         </tr>
         {{/concerts}}

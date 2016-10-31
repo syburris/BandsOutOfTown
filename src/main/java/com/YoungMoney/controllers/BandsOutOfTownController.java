@@ -47,7 +47,8 @@ public class BandsOutOfTownController {
         User user = users.findFirstByName(name);
 
         Iterable<Concert> concertList;
-        if ((citySearch != null) && (venueSearch == null && bandSearch == null)) {
+        if ((citySearch != null) && ((venueSearch == null || venueSearch.isEmpty()) &&
+                (bandSearch == null || bandSearch.isEmpty()))) {
             concertList = concerts.findByCity(citySearch);
         }
         else if ((venueSearch != null) && (citySearch == null && bandSearch == null)) {
@@ -171,5 +172,9 @@ public class BandsOutOfTownController {
         User user = users.findFirstByName(name);
         Concert concert = concerts.findOne(id);
         return user != null && concert !=null && user.name.equals(concert.user.name);
+    }
+
+    public boolean nullSearch() {
+        return true;
     }
 }
