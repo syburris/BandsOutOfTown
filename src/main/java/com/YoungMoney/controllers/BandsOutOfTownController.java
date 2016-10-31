@@ -47,23 +47,31 @@ public class BandsOutOfTownController {
         User user = users.findFirstByName(name);
 
         Iterable<Concert> concertList;
-        if ((citySearch != null) && ((venueSearch == null || venueSearch.isEmpty()) &&
-                (bandSearch == null || bandSearch.isEmpty()))) {
+        if (isValid(citySearch) && (!isValid(venueSearch)) &&
+                isValid(bandSearch)) {
             concertList = concerts.findByCity(citySearch);
         }
-        else if ((venueSearch != null) && (citySearch == null && bandSearch == null)) {
+        else if (isValid(venueSearch) && (!isValid(citySearch) &&
+                !isValid(bandSearch))) {
             concertList = concerts.findByVenue(venueSearch);
         }
-        else if ((bandSearch != null) && (venueSearch == null && citySearch == null)) {
+        else if (isValid(bandSearch) && (!isValid(venueSearch) &&
+                !isValid(citySearch))) {
             concertList = concerts.findByName(bandSearch);
         }
-        else if ((bandSearch != null && citySearch != null) && venueSearch == null) {
+        else if ((isValid(bandSearch) && isValid(citySearch)) &&
+            (!isValid(venueSearch))) {
             concertList = concerts.findByNameAndCity(bandSearch, citySearch);
         }
-        else if ((venueSearch != null && bandSearch !=null) && citySearch == null) {
+        else if ((isValid(venueSearch) && isValid(bandSearch)) &&
+            (!isValid(citySearch))) {
             concertList = concerts.findByVenueAndName(venueSearch, bandSearch);
         }
-        else if (citySearch != null && venueSearch != null && bandSearch != null) {
+        else if ((isValid(venueSearch) && isValid(citySearch)) &&
+                (!isValid(bandSearch))) {
+            concertList = concerts.findFirstByCityAndVenue(citySearch, venueSearch);
+        }
+        else if (isValid(citySearch) && isValid(venueSearch) && isValid(bandSearch)) {
             concertList = concerts.findByCityAndVenueAndName(citySearch, venueSearch, bandSearch);
         }
         else {
@@ -174,7 +182,7 @@ public class BandsOutOfTownController {
         return user != null && concert !=null && user.name.equals(concert.user.name);
     }
 
-    public boolean nullSearch() {
-        return true;
+    public boolean isValid(String string) {
+        return string != null && !string.isEmpty();
     }
 }

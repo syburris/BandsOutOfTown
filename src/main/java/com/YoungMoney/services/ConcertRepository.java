@@ -24,4 +24,5 @@ public interface ConcertRepository extends CrudRepository<Concert, Integer> {
 
     Iterable<Concert> findByCityAndVenueAndName(String citySearch, String venueSearch, String bandSearch);
 
+    Iterable<Concert> findFirstByCityAndVenue(String citySearch, String venueSearch);
 }
