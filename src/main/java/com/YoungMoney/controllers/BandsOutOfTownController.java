@@ -1,8 +1,10 @@
 package com.YoungMoney.controllers;
 
 import com.YoungMoney.entities.Concert;
+import com.YoungMoney.entities.Go;
 import com.YoungMoney.entities.User;
 import com.YoungMoney.services.ConcertRepository;
+import com.YoungMoney.services.GoingRepository;
 import com.YoungMoney.services.UserRepository;
 import com.YoungMoney.utilities.PasswordStorage;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +30,9 @@ public class BandsOutOfTownController {
     @Autowired
     ConcertRepository concerts;
 
+    @Autowired
+    GoingRepository going;
+
     @PostConstruct
     public void init() throws PasswordStorage.CannotPerformOperationException {
         User defaultUser = new User("Steven", PasswordStorage.createHash("Young"));
@@ -37,19 +42,35 @@ public class BandsOutOfTownController {
     }
 
     @RequestMapping(path = "/", method = RequestMethod.GET)
-    public String home(Model model, String search, HttpSession session) {
+    public String home(Model model, String citySearch, String venueSearch, String bandSearch, HttpSession session) {
         String name = (String) session.getAttribute("username");
         User user = users.findFirstByName(name);
 
         Iterable<Concert> concertList;
-        if (search != null) {
-            concertList = concerts.findFirstByCity(search);
+        if ((citySearch != null) && (venueSearch == null && bandSearch == null)) {
+            concertList = concerts.findByCity(citySearch);
+        }
+        else if ((venueSearch != null) && (citySearch == null && bandSearch == null)) {
+            concertList = concerts.findByVenue(venueSearch);
+        }
+        else if ((bandSearch != null) && (venueSearch == null && citySearch == null)) {
+            concertList = concerts.findByName(bandSearch);
+        }
+        else if ((bandSearch != null && citySearch != null) && venueSearch == null) {
+            concertList = concerts.findByNameAndCity(bandSearch, citySearch);
+        }
+        else if ((venueSearch != null && bandSearch !=null) && citySearch == null) {
+            concertList = concerts.findByVenueAndName(venueSearch, bandSearch);
+        }
+        else if (citySearch != null && venueSearch != null && bandSearch != null) {
+            concertList = concerts.findByCityAndVenueAndName(citySearch, venueSearch, bandSearch);
         }
         else {
             concertList = concerts.findAll();
         }
         for (Concert concert : concertList) {
             concert.isMe = concert.user.name.equals(name);
+            concert.isGoing = going.findFirstByUserAndConcert(user, concert) != null;
         }
 
         model.addAttribute("now", LocalDate.now());
@@ -111,6 +132,22 @@ public class BandsOutOfTownController {
         concert.setCity(city);
         concert.setState(state);
         concerts.save(concert);
+        return "redirect:/";
+    }
+
+    @RequestMapping(path = "/going", method = RequestMethod.POST)
+    public String addGoing(HttpSession session, int id) {
+        String name = (String) session.getAttribute("username");
+        User user = users.findFirstByName(name);
+        Concert concert = concerts.findOne(id);
+        Go go = going.findFirstByConcertAndUser(concert, user);
+        if (go != null) {
+            going.delete(go);
+        }
+        else {
+            go = new Go(user, concert);
+            going.save(go);
+        }
         return "redirect:/";
     }
 

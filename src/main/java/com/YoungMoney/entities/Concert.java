@@ -38,6 +38,10 @@ public class Concert {
     @Transient
     public boolean isMe;
 
+    @JsonIgnore
+    @Transient
+    public boolean isGoing;
+
     public Concert() {
     }
 
